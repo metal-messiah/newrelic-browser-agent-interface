@@ -2,7 +2,6 @@
   "name": "newrelic-browser-agent-interface",
   "version": "0.0.1",
   "description": "An interface that implements and checks the New Relic browser agent",
-  "main": "src/index.js",
   "scripts": {
     "build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack",
     "clean": "shx rm -rf _bundles lib lib-esm"
@@ -21,5 +20,7 @@
   "dependencies": {
     "@types/new-relic-browser": "^0.1212.0"
   },
-  "files": ["lib-esm/*"]
+  "files": [
+    "lib-esm/*"
+  ]
 }
