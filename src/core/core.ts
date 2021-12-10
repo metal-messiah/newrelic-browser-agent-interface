@@ -1,18 +1,28 @@
 import  { checkMethod } from '../checks/index'
 import * as NewRelic from "../types/types";
-import {config } from '../config/config';
+import { AgentConfigurations } from '../interface/interface';
 
-export function fail(): false {
-    // implement things like supportability metrics or something here?  This could be called whenever a check fails
-    return false
-}
+export default class Core {
+    constructor(public config: AgentConfigurations){}
 
-export function executeMethod(methodName: NewRelic.Callables, ...args: any[]): any {
-    if (checkMethod(methodName)) return execute(window.NREUM[methodName], ...args, config)
-    return fail()
-}
+    private fail: () => false = () => {
+        // implement things like supportability metrics or something here?  This could be called whenever a check fails
+        return false
+    }
 
-function execute<T>(func: T, ...args: any[]){
-    if (typeof func === 'function') return func(...args)
-    return fail()
+    private execute:<T>(func: T, ...args: any[]) => any | false = (func, ...args) => {
+        if (typeof func === 'function') return func(...args)
+        return this.fail()
+    }
+
+    executeScoped: (methodName: keyof NewRelic.GlobalApis | keyof NewRelic.ScopedApis, ...args: any[]) => any | false = (methodName, ...args) => {
+        console.log("executeScoped...", methodName, this.config)
+        if (checkMethod(methodName)) return this.execute(window.NREUM[methodName], ...args, this.config )
+        return this.fail()
+    }
+
+    executeGlobal: (methodName: keyof NewRelic.GlobalApis | keyof NewRelic.ScopedApis, ...args: any[]) => any | false = (methodName, ...args) => {
+        if (checkMethod(methodName)) return this.execute(window.NREUM[methodName], ...args )
+        return this.fail()
+    }
 }

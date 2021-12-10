@@ -1,5 +1,4 @@
-import * as methods from './methods/index';
-export var api = { global: methods.global, scoped: methods.scoped };
-export { checkAgent } from './checks/index';
-export { init } from './config/config';
+import Nrba from './interface/interface';
+export { AgentConfigurations } from './interface/interface';
+export default Nrba;
 //# sourceMappingURL=index.js.map

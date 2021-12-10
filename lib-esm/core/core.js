@@ -8,27 +8,44 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 import { checkMethod } from '../checks/index';
-import { config } from '../config/config';
-export function fail() {
-    // implement things like supportability metrics or something here?  This could be called whenever a check fails
-    return false;
-}
-export function executeMethod(methodName) {
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
+var Core = /** @class */ (function () {
+    function Core(config) {
+        var _this = this;
+        this.config = config;
+        this.fail = function () {
+            // implement things like supportability metrics or something here?  This could be called whenever a check fails
+            return false;
+        };
+        this.execute = function (func) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (typeof func === 'function')
+                return func.apply(void 0, args);
+            return _this.fail();
+        };
+        this.executeScoped = function (methodName) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            console.log("executeScoped...", methodName, _this.config);
+            if (checkMethod(methodName))
+                return _this.execute.apply(_this, __spreadArray(__spreadArray([window.NREUM[methodName]], args, false), [_this.config], false));
+            return _this.fail();
+        };
+        this.executeGlobal = function (methodName) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (checkMethod(methodName))
+                return _this.execute.apply(_this, __spreadArray([window.NREUM[methodName]], args, false));
+            return _this.fail();
+        };
     }
-    if (checkMethod(methodName))
-        return execute.apply(void 0, __spreadArray(__spreadArray([window.NREUM[methodName]], args, false), [config], false));
-    return fail();
-}
-function execute(func) {
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    if (typeof func === 'function')
-        return func.apply(void 0, args);
-    return fail();
-}
+    return Core;
+}());
+export default Core;
 //# sourceMappingURL=core.js.map

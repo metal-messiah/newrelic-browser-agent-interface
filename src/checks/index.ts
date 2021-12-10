@@ -1,23 +1,25 @@
-// import { config } from '../config/config'
-import { fail } from '../core/core'
-import { Nreum, Callables } from '../types/types'
+import { Nreum, GlobalApis, ScopedApis } from '../types/types'
 
 declare global {
     interface Window { NREUM: Nreum; newrelic: any}
 }
 
 export function checkAgent(): boolean {
-    if (!!(window && (window.NREUM || window.newrelic))) return true
-    return fail()
+    return !!(window && (window.NREUM || window.newrelic))
 }
 
-function getAgent(): Nreum | false {
-    if (checkAgent()) return window.NREUM
-    return fail()
+export function getAgent(): Nreum | false {
+    return checkAgent() && window.NREUM
 }
 
-export function checkMethod(methodName: Callables): boolean {
+export function checkMethod(methodName: keyof GlobalApis | keyof ScopedApis): boolean {
     const agent = !!checkAgent() && getAgent()
     if (!!agent) return agent.hasOwnProperty(methodName) && typeof window.NREUM[methodName] === "function"
-    return fail()
+    return false
+}
+
+export function checkConfig(): boolean {
+    const agent = getAgent()
+    if (!!agent) return agent.hasOwnProperty('info') && agent.hasOwnProperty('loader_config')
+    return false
 }

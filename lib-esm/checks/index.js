@@ -1,19 +1,19 @@
-// import { config } from '../config/config'
-import { fail } from '../core/core';
 export function checkAgent() {
-    if (!!(window && (window.NREUM || window.newrelic)))
-        return true;
-    return fail();
+    return !!(window && (window.NREUM || window.newrelic));
 }
-function getAgent() {
-    if (checkAgent())
-        return window.NREUM;
-    return fail();
+export function getAgent() {
+    return checkAgent() && window.NREUM;
 }
 export function checkMethod(methodName) {
     var agent = !!checkAgent() && getAgent();
     if (!!agent)
         return agent.hasOwnProperty(methodName) && typeof window.NREUM[methodName] === "function";
-    return fail();
+    return false;
+}
+export function checkConfig() {
+    var agent = getAgent();
+    if (!!agent)
+        return agent.hasOwnProperty('info') && agent.hasOwnProperty('loader_config');
+    return false;
 }
 //# sourceMappingURL=index.js.map

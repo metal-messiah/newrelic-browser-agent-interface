@@ -1,4 +1,4 @@
-import { Nreum, Callables } from '../types/types';
+import { Nreum, GlobalApis, ScopedApis } from '../types/types';
 declare global {
     interface Window {
         NREUM: Nreum;
@@ -6,4 +6,6 @@ declare global {
     }
 }
 export declare function checkAgent(): boolean;
-export declare function checkMethod(methodName: Callables): boolean;
+export declare function getAgent(): Nreum | false;
+export declare function checkMethod(methodName: keyof GlobalApis | keyof ScopedApis): boolean;
+export declare function checkConfig(): boolean;

@@ -1,3 +1,3 @@
-export declare const api: any;
-export { checkAgent } from './checks/index';
-export { init } from './config/config';
+import Nrba from './interface/interface';
+export { AgentConfigurations } from './interface/interface';
+export default Nrba;
