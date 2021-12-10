@@ -21,6 +21,7 @@
     "@types/new-relic-browser": "^0.1212.0"
   },
   "files": [
+    "lib",
     "lib-esm/*"
   ]
 }
