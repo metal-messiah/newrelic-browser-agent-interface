@@ -8,41 +8,30 @@ export class AgentConfigurations {
 }
 
 class Nrba {
-    api: NewRelic.Api
-    config: AgentConfigurations
-    core: Core
-
+    api: NewRelic.ScopedApis
+    
     constructor(config: AgentConfigurations){
-        this.config = config || new AgentConfigurations()
-        this.core = new Core(this.config)
-
-        const methods = new Methods(this.core)
-        this.api = {global: methods.global, scoped: methods.scoped}
-    }
-
-    delete (): void{
-        agentInterface.scopes = agentInterface.scopes.filter(s => s.config.appId !== this.config.appId)
+        const methods = new Methods(new Core(config || new AgentConfigurations()))
+        this.api = methods.scoped
     }
 }
 
 const agentInterface: {
-    setConfiguration: (info: NewRelic.Info, loaderConfig: NewRelic.LoaderConfig) => void,
-    scopes: Nrba[],
-    addScope: (config: AgentConfigurations) => Nrba,
-    checkAgent: () => boolean
+    setGlobalConfiguration: (info: NewRelic.Info, loaderConfig: NewRelic.LoaderConfig) => void,
+    createScope: (config: AgentConfigurations) => Nrba,
+    checkAgent: () => boolean,
+    api: NewRelic.GlobalApis
 } = {
-    setConfiguration: (info, loaderConfig) => {
+    api: new Methods(new Core(new AgentConfigurations())).global,
+    checkAgent,
+    createScope: (config) => {
+        return new Nrba(config)
+    },
+    setGlobalConfiguration: (info, loaderConfig) => {
         const agent = getAgent()
         if (agent) agent.info = info
         if (agent) agent.loader_config = loaderConfig
-    },
-    scopes: [],
-    addScope: (config) => {
-        const scope = new Nrba(config)
-        agentInterface.scopes = [...agentInterface.scopes, scope]
-        return scope
-    },
-    checkAgent
+    }
 }
 
 export default agentInterface

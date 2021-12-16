@@ -3,19 +3,6 @@ var Methods = /** @class */ (function () {
     function Methods(core) {
         var _this = this;
         /**
-        * Identifies a browser error without disrupting your app's operations.
-        *
-        * @param error Provide a meaningful error message that you can use when analyzing data on
-        *   New Relic Browser's JavaScript errors page.
-        * @param customAttributes An object containing name/value pairs representing custom attributes.
-        * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
-        */
-        this.noticeError = function (error, customAttributes) {
-            console.log("error", error);
-            console.log("this.core", _this.core);
-            return _this.core.executeScoped(NewRelic.Callables.NOTICE_ERROR, error, customAttributes);
-        };
-        /**
         * Executes an inline hit.
         *
         * @param requestName the 'web page' name or service name
@@ -26,7 +13,10 @@ var Methods = /** @class */ (function () {
         * @param feTime the time spent rendering the result of the service call (or user defined)
         * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
         */
-        this.inlineHit = function (t, requestName, queueTime, appTime, totalBeTime, domTime, feTime) {
+        this.inlineHitScoped = function (t, requestName, queueTime, appTime, totalBeTime, domTime, feTime) {
+            return _this.core.executeGlobal(NewRelic.Callables.INLINE_HIT, t, requestName, queueTime, appTime, totalBeTime, domTime, feTime);
+        };
+        this.inlineHitGlobal = function (t, requestName, queueTime, appTime, totalBeTime, domTime, feTime) {
             return _this.core.executeGlobal(NewRelic.Callables.INLINE_HIT, t, requestName, queueTime, appTime, totalBeTime, domTime, feTime);
         };
         /**
@@ -39,7 +29,10 @@ var Methods = /** @class */ (function () {
              *   value into a string, you can also use null or undefined if necessary
              * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-release
              */
-        this.addRelease = function (releaseName, releaseId) {
+        this.addReleaseScoped = function (releaseName, releaseId) {
+            return _this.core.executeScoped(NewRelic.Callables.ADD_RELEASE, releaseName, releaseId);
+        };
+        this.addReleaseGlobal = function (releaseName, releaseId) {
             return _this.core.executeScoped(NewRelic.Callables.ADD_RELEASE, releaseName, releaseId);
         };
         /**
@@ -50,7 +43,10 @@ var Methods = /** @class */ (function () {
          *   The key will report to Insights as its own PageAction attribute with the specified values.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-page-action
          */
-        this.addPageAction = function (name, attributes) {
+        this.addPageActionScoped = function (name, attributes) {
+            return _this.core.executeScoped(NewRelic.Callables.ADD_PAGE_ACTION, name, attributes);
+        };
+        this.addPageActionGlobal = function (name, attributes) {
             return _this.core.executeScoped(NewRelic.Callables.ADD_PAGE_ACTION, name, attributes);
         };
         /**
@@ -61,7 +57,10 @@ var Methods = /** @class */ (function () {
          *   PageAction event to be sent incorrectly. Instead, use the NAME attribute for event information.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-to-trace
          */
-        this.addToTrace = function (eventObject) {
+        this.addToTraceScoped = function (eventObject) {
+            return _this.core.executeGlobal(NewRelic.Callables.ADD_TO_TRACE, eventObject);
+        };
+        this.addToTraceGlobal = function (eventObject) {
             return _this.core.executeGlobal(NewRelic.Callables.ADD_TO_TRACE, eventObject);
         };
         /**
@@ -71,7 +70,10 @@ var Methods = /** @class */ (function () {
          *   the page is "finished" according to your own criteria.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/finished
          */
-        this.finished = function (timestamp) {
+        this.finishedScoped = function (timestamp) {
+            return _this.core.executeGlobal(NewRelic.Callables.FINISHED, timestamp);
+        };
+        this.finishedGlobal = function (timestamp) {
             return _this.core.executeGlobal(NewRelic.Callables.FINISHED, timestamp);
         };
         /**
@@ -84,7 +86,10 @@ var Methods = /** @class */ (function () {
          *   values cannot be complex objects, only simple types such as strings and numbers.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-custom-attribute
          */
-        this.setCustomAttribute = function (name, value) {
+        this.setCustomAttributeScoped = function (name, value) {
+            return _this.core.executeScoped(NewRelic.Callables.SET_CUSTOM_ATTRIBUTE, name, value);
+        };
+        this.setCustomAttributeGlobal = function (name, value) {
             return _this.core.executeScoped(NewRelic.Callables.SET_CUSTOM_ATTRIBUTE, name, value);
         };
         /**
@@ -94,7 +99,10 @@ var Methods = /** @class */ (function () {
          *   specific to one error. `err` will usually be an error object, but it can be other data types.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-error-handler
          */
-        this.setErrorHandler = function (filterCallback) {
+        this.setErrorHandlerScoped = function (filterCallback) {
+            return _this.core.executeGlobal(NewRelic.Callables.SET_ERROR_HANDLER, filterCallback);
+        };
+        this.setErrorHandlerGlobal = function (filterCallback) {
             return _this.core.executeGlobal(NewRelic.Callables.SET_ERROR_HANDLER, filterCallback);
         };
         /**
@@ -107,7 +115,10 @@ var Methods = /** @class */ (function () {
          *   the Whitelist segments in your URL whitelist settings if they do not already appear.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-pageview-name
          */
-        this.setPageViewName = function (name, host) {
+        this.setPageViewNameScoped = function (name, host) {
+            return _this.core.executeGlobal(NewRelic.Callables.SET_PAGE_VIEW_NAME, name, host);
+        };
+        this.setPageViewNameGlobal = function (name, host) {
             return _this.core.executeGlobal(NewRelic.Callables.SET_PAGE_VIEW_NAME, name, host);
         };
         /**
@@ -118,7 +129,10 @@ var Methods = /** @class */ (function () {
          *   references the same interaction.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/interaction-browser-spa-api
          */
-        this.interaction = function () {
+        this.interactionScoped = function () {
+            return _this.core.executeScoped(NewRelic.Callables.INTERACTION);
+        };
+        this.interactionGlobal = function () {
             return _this.core.executeScoped(NewRelic.Callables.INTERACTION);
         };
         /**
@@ -131,23 +145,45 @@ var Methods = /** @class */ (function () {
          *   the default naming strategy.
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/spa-set-current-route-name
          */
-        this.setCurrentRouteName = function (name) {
-            return _this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME);
+        this.setCurrentRouteNameScoped = function (name) {
+            return _this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME, name);
+        };
+        this.setCurrentRouteNameGlobal = function (name) {
+            return _this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME, name);
+        };
+        /**
+       * Identifies a browser error without disrupting your app's operations.
+       *
+       * @param error Provide a meaningful error message that you can use when analyzing data on
+       *   New Relic Browser's JavaScript errors page.
+       * @param customAttributes An object containing name/value pairs representing custom attributes.
+       * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
+       */
+        this.noticeErrorScoped = function (error, customAttributes) {
+            return _this.core.executeScoped(NewRelic.Callables.NOTICE_ERROR, error, customAttributes);
+        };
+        this.noticeErrorGlobal = function (error, customAttributes) {
+            return _this.core.executeGlobal(NewRelic.Callables.NOTICE_ERROR, error, customAttributes);
         };
         this.global = {
-            addToTrace: this.addToTrace,
-            finished: this.finished,
-            inlineHit: this.inlineHit,
-            setCurrentRouteName: this.setCurrentRouteName,
-            setErrorHandler: this.setErrorHandler,
-            setPageViewName: this.setPageViewName
+            addToTrace: this.addToTraceGlobal,
+            finished: this.finishedGlobal,
+            inlineHit: this.inlineHitGlobal,
+            setCurrentRouteName: this.setCurrentRouteNameGlobal,
+            setErrorHandler: this.setErrorHandlerGlobal,
+            setPageViewName: this.setPageViewNameGlobal,
+            noticeError: this.noticeErrorGlobal,
+            addRelease: this.addReleaseGlobal,
+            addPageAction: this.addPageActionGlobal,
+            setCustomAttribute: this.setCustomAttributeGlobal,
+            interaction: this.interactionGlobal
         };
         this.scoped = {
-            noticeError: this.noticeError,
-            addRelease: this.addRelease,
-            addPageAction: this.addPageAction,
-            setCustomAttribute: this.setCustomAttribute,
-            interaction: this.interaction
+            noticeError: this.noticeErrorScoped,
+            addRelease: this.addReleaseScoped,
+            addPageAction: this.addPageActionScoped,
+            setCustomAttribute: this.setCustomAttributeScoped,
+            interaction: this.interactionScoped
         };
         this.core = core;
     }

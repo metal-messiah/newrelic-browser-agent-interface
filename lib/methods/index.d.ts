@@ -4,15 +4,6 @@ export default class Methods {
     core: Core;
     constructor(core: Core);
     /**
-    * Identifies a browser error without disrupting your app's operations.
-    *
-    * @param error Provide a meaningful error message that you can use when analyzing data on
-    *   New Relic Browser's JavaScript errors page.
-    * @param customAttributes An object containing name/value pairs representing custom attributes.
-    * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
-    */
-    private noticeError;
-    /**
     * Executes an inline hit.
     *
     * @param requestName the 'web page' name or service name
@@ -23,7 +14,8 @@ export default class Methods {
     * @param feTime the time spent rendering the result of the service call (or user defined)
     * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
     */
-    private inlineHit;
+    private inlineHitScoped;
+    private inlineHitGlobal;
     /**
          * Adds a unique name and ID to identify releases with multiple JavaScript bundles on the same page.
          *
@@ -34,7 +26,8 @@ export default class Methods {
          *   value into a string, you can also use null or undefined if necessary
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-release
          */
-    private addRelease;
+    private addReleaseScoped;
+    private addReleaseGlobal;
     /**
      * Reports a Browser PageAction event to Insights along with a name and attributes.
      *
@@ -43,7 +36,8 @@ export default class Methods {
      *   The key will report to Insights as its own PageAction attribute with the specified values.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-page-action
      */
-    private addPageAction;
+    private addPageActionScoped;
+    private addPageActionGlobal;
     /**
      * Adds a JavaScript object with a custom name, start time, etc. to an in-progress session trace.
      *
@@ -52,7 +46,8 @@ export default class Methods {
      *   PageAction event to be sent incorrectly. Instead, use the NAME attribute for event information.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-to-trace
      */
-    private addToTrace;
+    private addToTraceScoped;
+    private addToTraceGlobal;
     /**
      * Records an additional time point as "finished" in a session trace, and sends the event to Insights.
      *
@@ -60,7 +55,8 @@ export default class Methods {
      *   the page is "finished" according to your own criteria.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/finished
      */
-    private finished;
+    private finishedScoped;
+    private finishedGlobal;
     /**
      * Adds a user-defined attribute name and value to subsequent events on the page.
      *
@@ -71,7 +67,8 @@ export default class Methods {
      *   values cannot be complex objects, only simple types such as strings and numbers.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-custom-attribute
      */
-    private setCustomAttribute;
+    private setCustomAttributeScoped;
+    private setCustomAttributeGlobal;
     /**
      * Allows selective ignoring of known errors that the Browser agent captures.
      *
@@ -79,7 +76,8 @@ export default class Methods {
      *   specific to one error. `err` will usually be an error object, but it can be other data types.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-error-handler
      */
-    private setErrorHandler;
+    private setErrorHandlerScoped;
+    private setErrorHandlerGlobal;
     /**
      * Groups page views to help URL structure or to capture the URL's routing information.
      *
@@ -90,7 +88,8 @@ export default class Methods {
      *   the Whitelist segments in your URL whitelist settings if they do not already appear.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-pageview-name
      */
-    private setPageViewName;
+    private setPageViewNameScoped;
+    private setPageViewNameGlobal;
     /**
      * Returns a new API object that is bound to the current SPA interaction.
      *
@@ -99,7 +98,8 @@ export default class Methods {
      *   references the same interaction.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/interaction-browser-spa-api
      */
-    private interaction;
+    private interactionScoped;
+    private interactionGlobal;
     /**
      * Gives SPA routes more accurate names than default names. Monitors specific routes rather than by default
      * grouping.
@@ -110,7 +110,18 @@ export default class Methods {
      *   the default naming strategy.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/spa-set-current-route-name
      */
-    private setCurrentRouteName;
+    private setCurrentRouteNameScoped;
+    private setCurrentRouteNameGlobal;
+    /**
+   * Identifies a browser error without disrupting your app's operations.
+   *
+   * @param error Provide a meaningful error message that you can use when analyzing data on
+   *   New Relic Browser's JavaScript errors page.
+   * @param customAttributes An object containing name/value pairs representing custom attributes.
+   * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
+   */
+    private noticeErrorScoped;
+    private noticeErrorGlobal;
     global: NewRelic.GlobalApis;
     scoped: NewRelic.ScopedApis;
 }

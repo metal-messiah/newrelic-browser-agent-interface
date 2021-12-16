@@ -1,12 +1,3 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 import Methods from '../methods/index';
 import { checkAgent, getAgent } from '../checks/index';
 import Core from '../core/core';
@@ -21,32 +12,24 @@ var AgentConfigurations = /** @class */ (function () {
 export { AgentConfigurations };
 var Nrba = /** @class */ (function () {
     function Nrba(config) {
-        this.config = config || new AgentConfigurations();
-        this.core = new Core(this.config);
-        var methods = new Methods(this.core);
-        this.api = { global: methods.global, scoped: methods.scoped };
+        var methods = new Methods(new Core(config || new AgentConfigurations()));
+        this.api = methods.scoped;
     }
-    Nrba.prototype.delete = function () {
-        var _this = this;
-        agentInterface.scopes = agentInterface.scopes.filter(function (s) { return s.config.appId !== _this.config.appId; });
-    };
     return Nrba;
 }());
 var agentInterface = {
-    setConfiguration: function (info, loaderConfig) {
+    setGlobalConfiguration: function (info, loaderConfig) {
         var agent = getAgent();
         if (agent)
             agent.info = info;
         if (agent)
             agent.loader_config = loaderConfig;
     },
-    scopes: [],
-    addScope: function (config) {
-        var scope = new Nrba(config);
-        agentInterface.scopes = __spreadArray(__spreadArray([], agentInterface.scopes, true), [scope], false);
-        return scope;
+    createScope: function (config) {
+        return new Nrba(config);
     },
-    checkAgent: checkAgent
+    checkAgent: checkAgent,
+    api: new Methods(new Core(new AgentConfigurations())).global
 };
 export default agentInterface;
 //# sourceMappingURL=interface.js.map

@@ -1,20 +1,16 @@
-import Core from '../core/core';
 import * as NewRelic from '../types/types';
 export declare class AgentConfigurations {
     appId: string;
     constructor(appId?: string);
 }
 declare class Nrba {
-    api: NewRelic.Api;
-    config: AgentConfigurations;
-    core: Core;
+    api: NewRelic.ScopedApis;
     constructor(config: AgentConfigurations);
-    delete(): void;
 }
 declare const agentInterface: {
-    setConfiguration: (info: NewRelic.Info, loaderConfig: NewRelic.LoaderConfig) => void;
-    scopes: Nrba[];
-    addScope: (config: AgentConfigurations) => Nrba;
+    setGlobalConfiguration: (info: NewRelic.Info, loaderConfig: NewRelic.LoaderConfig) => void;
+    createScope: (config: AgentConfigurations) => Nrba;
     checkAgent: () => boolean;
+    api: NewRelic.GlobalApis;
 };
 export default agentInterface;

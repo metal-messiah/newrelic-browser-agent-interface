@@ -18,7 +18,7 @@ export declare enum Callables {
     SET_PAGE_VIEW_NAME = "setPageViewName",
     SET_TOKEN = "setToken"
 }
-export interface GlobalApis {
+export interface GlobalApis extends ScopedApis {
     addToTrace?: AddToTrace;
     finished?: Finished;
     inlineHit?: InlineHit;

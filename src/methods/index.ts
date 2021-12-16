@@ -13,10 +13,11 @@ export default class Methods {
     * @param customAttributes An object containing name/value pairs representing custom attributes.
     * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
     */
-    private noticeError: NewRelic.NoticeError = (error: Error | string, customAttributes?: Record<string, String | Number>): void => {
-        console.log("error", error)
-        console.log("this.core", this.core)
+     private noticeErrorScoped: NewRelic.NoticeError = (error: Error | string, customAttributes?: Record<string, String | Number>): void => {
         return this.core.executeScoped(NewRelic.Callables.NOTICE_ERROR, error, customAttributes)
+    }
+    private noticeErrorGlobal: NewRelic.NoticeError = (error: Error | string, customAttributes?: Record<string, String | Number>): void => {
+        return this.core.executeGlobal(NewRelic.Callables.NOTICE_ERROR, error, customAttributes)
     }
 
     /**
@@ -30,7 +31,10 @@ export default class Methods {
     * @param feTime the time spent rendering the result of the service call (or user defined)
     * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/notice-error
     */
-    private inlineHit: NewRelic.InlineHit = (t: Date, requestName: string, queueTime: number, appTime: number, totalBeTime: number, domTime: number, feTime: number): void => {
+    private inlineHitScoped: NewRelic.InlineHit = (t: Date, requestName: string, queueTime: number, appTime: number, totalBeTime: number, domTime: number, feTime: number): void => {
+        return this.core.executeGlobal(NewRelic.Callables.INLINE_HIT, t, requestName, queueTime, appTime, totalBeTime, domTime, feTime)
+    }
+    private inlineHitGlobal: NewRelic.InlineHit = (t: Date, requestName: string, queueTime: number, appTime: number, totalBeTime: number, domTime: number, feTime: number): void => {
         return this.core.executeGlobal(NewRelic.Callables.INLINE_HIT, t, requestName, queueTime, appTime, totalBeTime, domTime, feTime)
     }
 
@@ -44,7 +48,10 @@ export default class Methods {
          *   value into a string, you can also use null or undefined if necessary
          * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-release
          */
-    private addRelease: NewRelic.AddRelease = (releaseName: string, releaseId: string): void => {
+    private addReleaseScoped: NewRelic.AddRelease = (releaseName: string, releaseId: string): void => {
+        return this.core.executeScoped(NewRelic.Callables.ADD_RELEASE, releaseName, releaseId)
+    };
+    private addReleaseGlobal: NewRelic.AddRelease = (releaseName: string, releaseId: string): void => {
         return this.core.executeScoped(NewRelic.Callables.ADD_RELEASE, releaseName, releaseId)
     };
 
@@ -56,9 +63,13 @@ export default class Methods {
      *   The key will report to Insights as its own PageAction attribute with the specified values.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-page-action
      */
-    private addPageAction: NewRelic.AddPageAction = (name: string, attributes?: Record<string, NewRelic.SimpleType>): void => {
+    private addPageActionScoped: NewRelic.AddPageAction = (name: string, attributes?: Record<string, NewRelic.SimpleType>): void => {
         return this.core.executeScoped(NewRelic.Callables.ADD_PAGE_ACTION, name, attributes)
     };
+    private addPageActionGlobal: NewRelic.AddPageAction = (name: string, attributes?: Record<string, NewRelic.SimpleType>): void => {
+        return this.core.executeScoped(NewRelic.Callables.ADD_PAGE_ACTION, name, attributes)
+    };
+    
 
     /**
      * Adds a JavaScript object with a custom name, start time, etc. to an in-progress session trace.
@@ -68,7 +79,10 @@ export default class Methods {
      *   PageAction event to be sent incorrectly. Instead, use the NAME attribute for event information.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/add-to-trace
      */
-    private addToTrace: NewRelic.AddToTrace = (eventObject: NewRelic.EventObject): void => {
+    private addToTraceScoped: NewRelic.AddToTrace = (eventObject: NewRelic.EventObject): void => {
+        return this.core.executeGlobal(NewRelic.Callables.ADD_TO_TRACE, eventObject)
+    };
+    private addToTraceGlobal: NewRelic.AddToTrace = (eventObject: NewRelic.EventObject): void => {
         return this.core.executeGlobal(NewRelic.Callables.ADD_TO_TRACE, eventObject)
     };
 
@@ -79,7 +93,10 @@ export default class Methods {
      *   the page is "finished" according to your own criteria.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/finished
      */
-    private finished: NewRelic.Finished = (timestamp?: number): void => {
+    private finishedScoped: NewRelic.Finished = (timestamp?: number): void => {
+        return this.core.executeGlobal(NewRelic.Callables.FINISHED, timestamp)
+    };
+    private finishedGlobal: NewRelic.Finished = (timestamp?: number): void => {
         return this.core.executeGlobal(NewRelic.Callables.FINISHED, timestamp)
     };
 
@@ -93,7 +110,10 @@ export default class Methods {
      *   values cannot be complex objects, only simple types such as strings and numbers.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-custom-attribute
      */
-    private setCustomAttribute: NewRelic.SetCustomAttribute = (name: string, value: NewRelic.SimpleType): void => {
+    private setCustomAttributeScoped: NewRelic.SetCustomAttribute = (name: string, value: NewRelic.SimpleType): void => {
+        return this.core.executeScoped(NewRelic.Callables.SET_CUSTOM_ATTRIBUTE, name, value)
+    };
+    private setCustomAttributeGlobal: NewRelic.SetCustomAttribute = (name: string, value: NewRelic.SimpleType): void => {
         return this.core.executeScoped(NewRelic.Callables.SET_CUSTOM_ATTRIBUTE, name, value)
     };
 
@@ -104,7 +124,10 @@ export default class Methods {
      *   specific to one error. `err` will usually be an error object, but it can be other data types.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-error-handler
      */
-    private setErrorHandler: NewRelic.SetErrorHandler = (filterCallback: NewRelic.ErrorHandler): void => {
+    private setErrorHandlerScoped: NewRelic.SetErrorHandler = (filterCallback: NewRelic.ErrorHandler): void => {
+        return this.core.executeGlobal(NewRelic.Callables.SET_ERROR_HANDLER, filterCallback)
+    };
+    private setErrorHandlerGlobal: NewRelic.SetErrorHandler = (filterCallback: NewRelic.ErrorHandler): void => {
         return this.core.executeGlobal(NewRelic.Callables.SET_ERROR_HANDLER, filterCallback)
     };
 
@@ -118,7 +141,10 @@ export default class Methods {
      *   the Whitelist segments in your URL whitelist settings if they do not already appear.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-pageview-name
      */
-    private setPageViewName: NewRelic.SetPageViewName = (name: string, host?: string): void => {
+    private setPageViewNameScoped: NewRelic.SetPageViewName = (name: string, host?: string): void => {
+        return this.core.executeGlobal(NewRelic.Callables.SET_PAGE_VIEW_NAME, name, host)
+    };
+    private setPageViewNameGlobal: NewRelic.SetPageViewName = (name: string, host?: string): void => {
         return this.core.executeGlobal(NewRelic.Callables.SET_PAGE_VIEW_NAME, name, host)
     };
 
@@ -130,7 +156,10 @@ export default class Methods {
      *   references the same interaction.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/interaction-browser-spa-api
      */
-    private interaction: NewRelic.Interaction = (): NewRelic.BrowserInteraction => {
+    private interactionScoped: NewRelic.Interaction = (): NewRelic.BrowserInteraction => {
+        return this.core.executeScoped(NewRelic.Callables.INTERACTION)
+    };
+    private interactionGlobal: NewRelic.Interaction = (): NewRelic.BrowserInteraction => {
         return this.core.executeScoped(NewRelic.Callables.INTERACTION)
     };
 
@@ -144,24 +173,32 @@ export default class Methods {
      *   the default naming strategy.
      * @see https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/spa-set-current-route-name
      */
-    private setCurrentRouteName: NewRelic.SetCurrentRouteName = (name: string | null): void => {
-        return this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME)
+    private setCurrentRouteNameScoped: NewRelic.SetCurrentRouteName = (name: string | null): void => {
+        return this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME, name)
+    };
+    private setCurrentRouteNameGlobal: NewRelic.SetCurrentRouteName = (name: string | null): void => {
+        return this.core.executeGlobal(NewRelic.Callables.SET_CURRENT_ROUTE_NAME, name)
     };
 
     public global: NewRelic.GlobalApis = {
-        addToTrace: this.addToTrace,
-        finished: this.finished,
-        inlineHit: this.inlineHit,
-        setCurrentRouteName: this.setCurrentRouteName,
-        setErrorHandler: this.setErrorHandler,
-        setPageViewName: this.setPageViewName
+        addToTrace: this.addToTraceGlobal,
+        finished: this.finishedGlobal,
+        inlineHit: this.inlineHitGlobal,
+        setCurrentRouteName: this.setCurrentRouteNameGlobal,
+        setErrorHandler: this.setErrorHandlerGlobal,
+        setPageViewName: this.setPageViewNameGlobal,
+        noticeError: this.noticeErrorGlobal,
+        addRelease: this.addReleaseGlobal,
+        addPageAction: this.addPageActionGlobal,
+        setCustomAttribute: this.setCustomAttributeGlobal,
+        interaction: this.interactionGlobal
     }
 
     public scoped: NewRelic.ScopedApis = {
-        noticeError: this.noticeError,
-        addRelease: this.addRelease,
-        addPageAction: this.addPageAction,
-        setCustomAttribute: this.setCustomAttribute,
-        interaction: this.interaction
+        noticeError: this.noticeErrorScoped,
+        addRelease: this.addReleaseScoped,
+        addPageAction: this.addPageActionScoped,
+        setCustomAttribute: this.setCustomAttributeScoped,
+        interaction: this.interactionScoped
     }
 }
